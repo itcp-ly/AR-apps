@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.sanojpunchihewa.glowbutton.GlowButton
+        android:id="@+id/opt1"
+        android:textColor="@color/white"
+        android:text="Select Model"
+        android:layout_centerInParent="true"
+        app:buttonColor="@color/colorPrimary"
+        app:unpressedGlowSize="20dp"
+        app:pressedGlowSize="25dp"
+        app:glowColor="@color/colorPrimary"
+        app:cornerRadius="50dp"
+        android:layout_width="200dp"
+        android:layout_height="80dp"/>
+    <com.sanojpunchihewa.glowbutton.GlowButton
+        android:id="@+id/opt2"
+        android:textColor="@color/white"
+        android:text="Custom your!"
+        android:layout_centerInParent="true"
+        app:buttonColor="@color/colorPrimary"
+        app:unpressedGlowSize="20dp"
+        app:pressedGlowSize="25dp"
+        app:glowColor="@color/colorPrimary"
+        app:cornerRadius="50dp"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:layout_below="@+id/opt1"/>
+
+</RelativeLayout>
