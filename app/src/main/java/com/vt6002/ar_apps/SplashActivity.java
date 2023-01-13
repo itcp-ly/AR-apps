@@ -10,7 +10,7 @@ import android.view.animation.Animation;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+//Splash Page tutorials(https://youtu.be/9O1lI0BRCCE)
 public class SplashActivity extends AppCompatActivity {
     private static int SPLASH_SCREEN_TIMEOUT = 2000;
 

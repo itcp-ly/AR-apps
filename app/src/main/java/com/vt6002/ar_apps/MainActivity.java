@@ -32,7 +32,10 @@ import com.vt6002.ar_apps.videorecording.WritingArFragment;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.net.URI;
+//Sceneform tutorials (https://developers.google.com/sceneform/develop) & (https://youtu.be/2YtlIiUKNdA)
+//Sceneform code sample (https://github.com/google-ar/sceneform-android-sdk)
+//Video Recording Class sample (https://github.com/google-ar/sceneform-android-sdk/tree/v1.15.0/samples/videorecording)
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     // The UI to record.
     private FloatingActionButton recordButton;
     private WritingArFragment arFragment;
-
+    private URI paramUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,30 +57,39 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         setContentView(R.layout.activity_main);
-        FirebaseApp.initializeApp(this);
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
 
         arFragment = (WritingArFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.arFragment);
 
         Intent intent = getIntent();
-        int position = intent.getIntExtra("position", 0);
-        String[] myKeys = getResources().getStringArray(R.array.sections);
-        StorageReference modelRef = storage.getReference().child(String.format("%s.glb", myKeys[position]));
-        File file;
-        try {
-            file = File.createTempFile((String.format("%s", myKeys[position])), "glb");
-            modelRef.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    buildModel(file);
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
+        if (intent.getStringExtra("uri") != null){
+            try {
+                File file = new File(new URI(intent.getStringExtra("uri")));
+                buildModel(file);
+            } catch (Exception ex) {
+                Log.e("ModelActivity", "Error parsing activity parameters: " + ex.getMessage(), ex);
+            }
+        } else {
+            FirebaseApp.initializeApp(this);
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            int position = intent.getIntExtra("position", 0);
+            String[] myKeys = getResources().getStringArray(R.array.sections);
+            StorageReference modelRef = storage.getReference().child(String.format("%s.glb", myKeys[position]));
+            File file;
+            try {
+                file = File.createTempFile((String.format("%s", myKeys[position])), "glb");
+                modelRef.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        buildModel(file);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
 
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
@@ -198,8 +210,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "model built", Toast.LENGTH_SHORT).show();
                     renderable = modelRenderable;
                 });
-
-
     }
 
 
